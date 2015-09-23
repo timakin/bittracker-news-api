@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Promise = require('promise');
 var request = require('superagent');
+var _ = require('underscore');
 
 /* GET users listing. */
 router.get('/', function(req, res) {
@@ -11,22 +12,33 @@ router.get('/', function(req, res) {
   ]
 
   var promises = [];
+  
   for (var i = 0; i < targetUrls.length; i++) {
     promises[i] = new Promise(function (resolve, reject){
-      request(targetUrls[i], function(err, result) {
+      request(targetUrls[i], function(err, res) {
         if (err) reject(err);
-            resolve(result);
+        var news = [];  
+        _.map(res.body.items, function(item) {
+          news.push({
+            title:      item.title,
+            url:        item.originId,
+            origin:     item.origin.title,
+            image_uri:  item.visual.url,
+            created_at: item.published
+          });
         });
+        resolve(news);
+      });
     });
   };
 
   Promise.all(promises)
     .then(function(results) {
-      return results.concat();
-    })
-    .then(function(results) {
+      var news = [];
+      _.map(results, function(result) { news = news.concat(result); });
+      news = _.sortBy(news, 'created_at').reverse();
       res.json({
-        response: results
+        response: news
       });
     });
 });
