@@ -5,10 +5,12 @@ var request = require('superagent');
 var _ = require('underscore');
 
 /* GET users listing. */
-router.get('/', function(req, res) {
+router.get('/jp', function(req, res) {
   var targetUrls = [
     "http://cloud.feedly.com/v3/mixes/contents?streamId=feed%2Fhttp%3A%2F%2Fbtcnews.jp%2Ffeed%2F&count=10",
-    "http://cloud.feedly.com/v3/mixes/contents?streamId=feed%2Fhttp%3A%2F%2Fnews.bitflyer.jp%2Ffeed%2F&count=10"
+    "http://cloud.feedly.com/v3/mixes/contents?streamId=feed%2Fhttp%3A%2F%2Fnews.bitflyer.jp%2Ffeed%2F&count=10",
+    "http://cloud.feedly.com/v3/mixes/contents?streamId=feed%2Fhttp%3A%2F%2Fbitbitecoin.com%2Ffeed%2F&count=10",
+    "http://cloud.feedly.com/v3/mixes/contents?streamId=feed%2Fhttp%3A%2F%2Fcryptocurrencymagazine.com%2Ffeed%2F&count=10"
   ]
 
   var promises = [];
@@ -19,13 +21,15 @@ router.get('/', function(req, res) {
         if (err) reject(err);
         var news = [];  
         _.map(res.body.items, function(item) {
-          news.push({
-            title:      item.title,
-            url:        item.originId,
-            origin:     item.origin.title,
-            image_uri:  item.visual.url,
-            created_at: item.published
-          });
+          if (item.visual) {
+            news.push({
+              title:      item.title,
+              url:        item.originId,
+              origin:     item.origin.title,
+              image_uri:  item.visual.url,
+              created_at: item.published
+            });
+          }
         });
         resolve(news);
       });
