@@ -21,7 +21,7 @@ router.get('/jp', function(req, res) {
         if (err) reject(err);
         var news = [];  
         _.map(res.body.items, function(item) {
-          if (item.visual) {
+          if (item.visual && item.visual.url != 'none') {
             news.push({
               title:      item.title,
               url:        item.originId,
