@@ -1,5 +1,4 @@
 var request = require('superagent');
-var Promise = require('promise');
 
 var requestPromise = function(url, cb) {
 	return new Promise(function (resolve, reject){

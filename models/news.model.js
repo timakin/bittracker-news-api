@@ -2,7 +2,6 @@
 
 var _              = require('underscore');
 var endpoints      = require('../config/endpoints.json');
-var Promise        = require('promise');
 var requestPromise = require('../utils/requestPromise');
 
 var filterNewsItems = function(items) {
