@@ -4,9 +4,9 @@ var _              = require('underscore');
 var endpoints      = require('../config/endpoints.json');
 var requestPromise = require('../utils/requestPromise');
 
-var filterNewsItems = function(items) {
+var filterNewsItems = (items) => {
   let news = [];
-  _.map(items, function(item) {
+  _.map(items, (item) => {
     if (item.visual && item.visual.url != 'none') {
       news.push({
         title:      item.title,
@@ -23,19 +23,19 @@ var filterNewsItems = function(items) {
 module.exports = class News {
   sortByCreatedAt(items) {
     let news = [];
-    _.map(items, function(item) { news = news.concat(item); });
+    _.map(items, (item) => { news = news.concat(item); });
     return _.sortBy(news, 'created_at').reverse();
   }
 
   getNews(cb) {
     let promises = [];
     for (let i = 0; i < endpoints.feedly.jp.length; i++) {
-      promises[i] = requestPromise(endpoints.feedly.jp[i], function(res) {
+      promises[i] = requestPromise(endpoints.feedly.jp[i], (res) => {
           return filterNewsItems(res.body.items);
       });
     }
     Promise.all(promises)
-      .then(function(news) {
+      .then((news) => {
         cb(news);
       });
   }
