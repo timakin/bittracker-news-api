@@ -1,8 +1,9 @@
 "use strict";
 
-var _              = require('underscore');
-var endpoints      = require('../config/endpoints.json');
-var requestPromise = require('../utils/requestPromise');
+var _         = require('underscore');
+var fetch     = require('../utils/fetch');
+var endpoints = require('../config/endpoints.json');
+
 const urls = endpoints.feedly.jp;
 
 const filterNewsItems = (items) => {
@@ -31,7 +32,7 @@ module.exports = class News {
   getNews(cb) {
     let promises = [];
     for (let i = 0; i < urls.length; i++) {
-      promises[i] = requestPromise(urls[i], (res) => {
+      promises[i] = fetch(urls[i], (res) => {
           return filterNewsItems(res.body.items);
       });
     }

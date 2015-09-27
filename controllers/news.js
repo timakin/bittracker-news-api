@@ -1,12 +1,9 @@
 "use strict";
 
-var _              = require('underscore');
-var endpoints      = require('../config/endpoints.json');
-var express        = require('express');
-var router         = express.Router();
-var request        = require('superagent');
-var newsModel      = require('../models/news.model');
-var requestPromise = require('../utils/requestPromise');
+var _         = require('underscore');
+var express   = require('express');
+var router    = express.Router();
+var newsModel = require('../models/news.model');
 
 /* GET users listing. */
 router.get('/jp', (req, res) => {

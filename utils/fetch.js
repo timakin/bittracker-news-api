@@ -2,7 +2,7 @@
 
 var request = require('superagent');
 
-const requestPromise = function(url, cb) {
+const fetch = function(url, cb) {
 	return new Promise(function (resolve, reject){
       request(url, function(err, res) {
         if (err) reject(err);
@@ -11,4 +11,4 @@ const requestPromise = function(url, cb) {
     });
 };
 
-module.exports = requestPromise;
+module.exports = fetch;
