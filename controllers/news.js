@@ -9,9 +9,11 @@ var requestPromise = require('../utils/requestPromise');
 
 /* GET users listing. */
 router.get('/jp', function(req, res) {
-  newsModel.getNews(function(news) {
+  var News = new newsModel();
+
+  News.getNews(function(news) {
     res.json({
-      response: newsModel.sortByCreatedAt(news)
+      response: News.sortByCreatedAt(news)
     });
   });
 });
