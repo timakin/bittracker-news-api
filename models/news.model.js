@@ -3,8 +3,9 @@
 var _              = require('underscore');
 var endpoints      = require('../config/endpoints.json');
 var requestPromise = require('../utils/requestPromise');
+const urls = endpoints.feedly.jp;
 
-var filterNewsItems = (items) => {
+const filterNewsItems = (items) => {
   let news = [];
   _.map(items, (item) => {
     if (item.visual && item.visual.url != 'none') {
@@ -29,8 +30,8 @@ module.exports = class News {
 
   getNews(cb) {
     let promises = [];
-    for (let i = 0; i < endpoints.feedly.jp.length; i++) {
-      promises[i] = requestPromise(endpoints.feedly.jp[i], (res) => {
+    for (let i = 0; i < urls.length; i++) {
+      promises[i] = requestPromise(urls[i], (res) => {
           return filterNewsItems(res.body.items);
       });
     }

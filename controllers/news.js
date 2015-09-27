@@ -1,3 +1,5 @@
+"use strict";
+
 var _              = require('underscore');
 var endpoints      = require('../config/endpoints.json');
 var express        = require('express');
@@ -8,7 +10,7 @@ var requestPromise = require('../utils/requestPromise');
 
 /* GET users listing. */
 router.get('/jp', (req, res) => {
-  var News = new newsModel();
+  let News = new newsModel();
 
   News.getNews((news) => {
     res.json({
