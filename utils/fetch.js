@@ -2,11 +2,11 @@
 
 var request = require('superagent');
 
-const fetch = function(url) {
+const fetch = function(url, cb) {
 	return new Promise(function (resolve, reject){
       request(url, function(err, res) {
         if (err) reject(err);
-        resolve(res);
+        resolve(cb(res));
       });
     });
 };

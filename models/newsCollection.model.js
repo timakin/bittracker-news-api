@@ -32,14 +32,13 @@ class NewsCollection {
   get(cb) {
     let promises = [];
     for (let i = 0; i < urls.length; i++) {
-      promises[i] = fetch(urls[i]);
+      promises[i] = fetch(urls[i], (res) => {
+          return this._filterByImageExistance(res.body.items);
+      });
     }
     Promise.all(promises)
-      .then((res) => {
-        return this._filterByImageExistance(res.body.items);
-      })
-      .then((filteredItems) => {
-        return this._sortByCreatedAt(filteredItems);
+      .then((items) => {
+        return this._sortByCreatedAt(items);
       })
       .then((result) => {
         cb(result);
