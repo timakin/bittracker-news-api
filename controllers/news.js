@@ -11,7 +11,7 @@ router.get('/jp', (req, res) => {
 
   newsCollection.get((items) => {
     res.json({
-      response: newsCollection.sortByCreatedAt(items)
+      response: items
     });
   });
 });

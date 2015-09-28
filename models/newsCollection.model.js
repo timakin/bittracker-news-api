@@ -6,24 +6,24 @@ var endpoints = require('../config/endpoints.json');
 
 const urls = endpoints.feedly.jp;
 
-const filterNewsItems = (items) => {
-  let news = [];
-  _.map(items, (item) => {
-    if (item.visual && item.visual.url != 'none') {
-      news.push({
-        title:      item.title,
-        url:        item.originId,
-        origin:     item.origin.title,
-        image_uri:  item.visual.url,
-        created_at: item.published
-      });
-    }
-  });
-  return news;
-};
-
 class NewsCollection {
-  sortByCreatedAt(items) {
+  _filterByImageExistance(items) {
+    let news = [];
+    _.map(items, (item) => {
+      if (item.visual && item.visual.url != 'none') {
+        news.push({
+          title:      item.title,
+          url:        item.originId,
+          origin:     item.origin.title,
+          image_uri:  item.visual.url,
+          created_at: item.published
+        });
+      }
+    });
+    return news;
+  }
+
+  _sortByCreatedAt(items) {
     let news = [];
     _.map(items, (item) => { news = news.concat(item); });
     return _.sortBy(news, 'created_at').reverse();
@@ -33,12 +33,15 @@ class NewsCollection {
     let promises = [];
     for (let i = 0; i < urls.length; i++) {
       promises[i] = fetch(urls[i], (res) => {
-          return filterNewsItems(res.body.items);
+          return this._filterByImageExistance(res.body.items);
       });
     }
     Promise.all(promises)
-      .then((news) => {
-        cb(news);
+      .then((items) => {
+        return this._sortByCreatedAt(items);
+      })
+      .then((result) => {
+        cb(result);
       });
   }
 };
