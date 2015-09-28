@@ -8,10 +8,10 @@ const urls = endpoints.feedly.jp;
 
 class NewsCollection {
   _filterByImageExistance(items) {
-    let news = [];
+    let results = [];
     _.map(items, (item) => {
       if (item.visual && item.visual.url != 'none') {
-        news.push({
+        results.push({
           title:      item.title,
           url:        item.originId,
           origin:     item.origin.title,
@@ -20,25 +20,26 @@ class NewsCollection {
         });
       }
     });
-    return news;
+    return results;
   }
 
   _sortByCreatedAt(items) {
-    let news = [];
-    _.map(items, (item) => { news = news.concat(item); });
-    return _.sortBy(news, 'created_at').reverse();
+    let results = [];
+    _.map(items, (item) => { results = results.concat(item); });
+    return _.sortBy(results, 'created_at').reverse();
   }
 
   get(cb) {
     let promises = [];
     for (let i = 0; i < urls.length; i++) {
-      promises[i] = fetch(urls[i], (res) => {
-          return this._filterByImageExistance(res.body.items);
-      });
+      promises[i] = fetch(urls[i]);
     }
     Promise.all(promises)
-      .then((items) => {
-        return this._sortByCreatedAt(items);
+      .then((res) => {
+        return this._filterByImageExistance(res.body.items);
+      })
+      .then((filteredItems) => {
+        return this._sortByCreatedAt(filteredItems);
       })
       .then((result) => {
         cb(result);
