@@ -22,14 +22,14 @@ const filterNewsItems = (items) => {
   return news;
 };
 
-module.exports = class News {
+class NewsCollection {
   sortByCreatedAt(items) {
     let news = [];
     _.map(items, (item) => { news = news.concat(item); });
     return _.sortBy(news, 'created_at').reverse();
   }
 
-  getNews(cb) {
+  get(cb) {
     let promises = [];
     for (let i = 0; i < urls.length; i++) {
       promises[i] = fetch(urls[i], (res) => {
@@ -43,3 +43,4 @@ module.exports = class News {
   }
 };
 
+module.exports = NewsCollection;
