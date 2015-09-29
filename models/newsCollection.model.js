@@ -8,7 +8,17 @@ var newsModel = require('./news.model');
 const urls = endpoints.feedly.jp;
 
 class NewsCollection {
-  _filterItemsByImageExistance(items) {
+  _createNewsModelByFeedly(item) {
+    return new newsModel({
+      title:      item.title,
+      url:        item.originId,
+      origin:     item.origin.title,
+      image_uri:  item.visual.url,
+      created_at: item.published
+    });
+  }
+
+  _filterFeedlyItemsByImageExistance(items) {
     return _.select(items, (item) => { return (item.visual && item.visual.url != 'none') });
   }
 
@@ -20,27 +30,15 @@ class NewsCollection {
     return _.sortBy(items, 'created_at').reverse();
   }
 
-  _createNewsModelByFeedly(item) {
-    return new newsModel({
-      title:      item.title,
-      url:        item.originId,
-      origin:     item.origin.title,
-      image_uri:  item.visual.url,
-      created_at: item.published
-    });
-  }
-
   get(cb) {
-    let promises = [];
-    for (let i = 0; i < urls.length; i++) {
-      promises[i] = fetch(urls[i], (res) => { return res.body.items });
-    }
+    let promises = _.map(urls, (url) => { return fetch(url, (res) => { return res.body.items }) });
+
     Promise.all(promises)
       .then((items) => {
         return _.flatten(items);
       })
       .then((items) => {
-        return this._filterItemsByImageExistance(items);
+        return this._filterFeedlyItemsByImageExistance(items);
       })
       .then((items) => {
         return _.map(items, (item) => { return this._createNewsModelByFeedly(item) });
