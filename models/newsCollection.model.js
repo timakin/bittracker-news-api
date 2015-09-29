@@ -19,15 +19,15 @@ class NewsCollection {
   }
 
   _createNewsModelCollectionByFeedly(items) {
-    return _.map(items, (item) => { return this._createNewsModelByFeedly(item) });
+    return _.map(items, (item) => this._createNewsModelByFeedly(item));
   }
 
   _filterFeedlyItemsByImageExistance(items) {
-    return _.select(items, (item) => { return (item.visual && item.visual.url != 'none') });
+    return _.select(items, (item) => (item.visual && item.visual.url != 'none'));
   }
 
   _convertNewsModelToObject(items) {
-    return _.flatten(items).map((item) => { return item.toObject() });
+    return _.flatten(items).map((item) => item.toObject());
   }
 
   _sortByCreatedAt(items) {
@@ -38,12 +38,12 @@ class NewsCollection {
     let promises = _.map(urls, (url) => { return fetch(url, (res) => { return res.body.items }) });
 
     Promise.all(promises)
-      .then((items) => { return _.flatten(items)                               })
-      .then((items) => { return this._filterFeedlyItemsByImageExistance(items) })
-      .then((items) => { return this._createNewsModelCollectionByFeedly(items) })
-      .then((items) => { return this._convertNewsModelToObject(items)          })
-      .then((items) => { return this._sortByCreatedAt(items)                   })
-      .then((items) => { cb(items) }, (err) => { console.error(err.stack)      });
+      .then((items) => _.flatten(items)                               )
+      .then((items) => this._filterFeedlyItemsByImageExistance(items) )
+      .then((items) => this._createNewsModelCollectionByFeedly(items) )
+      .then((items) => this._convertNewsModelToObject(items)          )
+      .then((items) => this._sortByCreatedAt(items)                   )
+      .then((items) => cb(items), (err) => console.error(err.stack)   );
   }
 };
 
