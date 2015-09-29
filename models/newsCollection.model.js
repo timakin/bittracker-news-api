@@ -38,12 +38,12 @@ class NewsCollection {
     let promises = _.map(urls, (url) => { return fetch(url, (res) => { return res.body.items }) });
 
     Promise.all(promises)
-      .then((items) => { return _.flatten(items) })
+      .then((items) => { return _.flatten(items)                               })
       .then((items) => { return this._filterFeedlyItemsByImageExistance(items) })
       .then((items) => { return this._createNewsModelCollectionByFeedly(items) })
-      .then((items) => { return this._convertNewsModelToObject(items) })
-      .then((items) => { return this._sortByCreatedAt(items) })
-      .then((items) => { cb(items) }, (err) => { console.error(err.stack) });
+      .then((items) => { return this._convertNewsModelToObject(items)          })
+      .then((items) => { return this._sortByCreatedAt(items)                   })
+      .then((items) => { cb(items) }, (err) => { console.error(err.stack)      });
   }
 };
 
