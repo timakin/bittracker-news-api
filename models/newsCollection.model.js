@@ -26,7 +26,7 @@ class NewsCollection {
     return _.select(items, (item) => { return (item.visual && item.visual.url != 'none') });
   }
 
-  _parseNewsModelAsObject(items) {
+  _convertNewsModelToObject(items) {
     return _.flatten(items).map((item) => { return item.toObject() });
   }
 
@@ -41,7 +41,7 @@ class NewsCollection {
       .then((items) => { return _.flatten(items) })
       .then((items) => { return this._filterFeedlyItemsByImageExistance(items) })
       .then((items) => { return this._createNewsCollectionModelByFeedly(items) })
-      .then((items) => { return this._parseNewsModelAsObject(items) })
+      .then((items) => { return this._convertNewsModelToObject(items) })
       .then((items) => { return this._sortByCreatedAt(items) })
       .then((items) => { cb(items) }, (err) => { console.error(err.stack) });
   }
