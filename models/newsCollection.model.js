@@ -51,6 +51,8 @@ class NewsCollection {
       })
       .then((result) => {
         cb(result);
+      }, (err) => {
+        console.error(err.stack);
       });
   }
 };
