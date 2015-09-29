@@ -9,27 +9,12 @@ const urls = endpoints.feedly.jp;
 
 class NewsCollection {
   _filterByImageExistance(items) {
-    let results = [];
-    _.map(items, (item) => {
-      if (item.visual && item.visual.url != 'none') {
-        let news = new newsModel({
-          title:      item.title,
-          url:        item.originId,
-          origin:     item.origin.title,
-          image_uri:  item.visual.url,
-          created_at: item.published
-        });
-        results.push(news);
-      }
-    });
-    return results;
+    return _.select(items, (item) => { return (item.visual && item.visual.url != 'none') });
   }
 
   _sortByCreatedAt(items) {
-    let results = [];
-    _.map(items, (item) => { results = results.concat(item) });
-    let resultObjects = _.map(results, (result) => { return result.toObject(); });
-    return _.sortBy(resultObjects, 'created_at').reverse();
+    let newsObjects = _.map(_.flatten(items), (item) => { return item.toObject(); });
+    return _.sortBy(newsObjects, 'created_at').reverse();
   }
 
   get(cb) {
@@ -40,6 +25,23 @@ class NewsCollection {
       });
     }
     Promise.all(promises)
+      .then((results) => {
+        return _.flatten(results);
+      })
+      .then((itemsWithImage) => {
+        let results = [];
+        _.map(itemsWithImage, (item) => {
+          let news = new newsModel({
+            title:      item.title,
+            url:        item.originId,
+            origin:     item.origin.title,
+            image_uri:  item.visual.url,
+            created_at: item.published
+          });
+          results.push(news);
+        });
+        return results;
+      })
       .then((items) => {
         return this._sortByCreatedAt(items);
       })
