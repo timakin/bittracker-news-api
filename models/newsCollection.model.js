@@ -12,7 +12,7 @@ class NewsCollection {
     return _.select(items, (item) => { return (item.visual && item.visual.url != 'none') });
   }
 
-  _parseNewsAsObject(items) {
+  _parseNewsModelAsObject(items) {
     return _.flatten(items).map((item) => { return item.toObject() });
   }
 
@@ -24,12 +24,15 @@ class NewsCollection {
     let promises = [];
     for (let i = 0; i < urls.length; i++) {
       promises[i] = fetch(urls[i], (res) => {
-          return this._filterItemsByImageExistance(res.body.items);
+          return res.body.items;
       });
     }
     Promise.all(promises)
       .then((items) => {
         return _.flatten(items);
+      })
+      .then((items) => {
+        return this._filterItemsByImageExistance(items);
       })
       .then((itemsWithImage) => {
         let results = [];
@@ -46,7 +49,7 @@ class NewsCollection {
         return results;
       })
       .then((items) => {
-        return this._parseNewsAsObject(items);
+        return this._parseNewsModelAsObject(items);
       })
       .then((items) => {
         return this._sortByCreatedAt(items);

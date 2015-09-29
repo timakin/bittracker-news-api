@@ -11,13 +11,13 @@ class News {
 
 	toObject() {
 		return {
-			title: this.title,
-	        url: this.url,
-	        origin: this.origin,
-	        image_uri: this.image_uri,
+			title: 		this.title,
+	        url: 		this.url,
+	        origin: 	this.origin,
+	        image_uri: 	this.image_uri,
 	        created_at: this.created_at
-		}
+		};
 	}
-}
+};
 
 module.exports = News;
