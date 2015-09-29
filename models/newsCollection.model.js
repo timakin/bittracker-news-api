@@ -8,20 +8,23 @@ var newsModel = require('./news.model');
 const urls = endpoints.feedly.jp;
 
 class NewsCollection {
-  _filterByImageExistance(items) {
+  _filterItemsByImageExistance(items) {
     return _.select(items, (item) => { return (item.visual && item.visual.url != 'none') });
   }
 
+  _parseNewsAsObject(items) {
+    return _.flatten(items).map((item) => { return item.toObject() });
+  }
+
   _sortByCreatedAt(items) {
-    let newsObjects = _.map(_.flatten(items), (item) => { return item.toObject(); });
-    return _.sortBy(newsObjects, 'created_at').reverse();
+    return _.sortBy(items, 'created_at').reverse();
   }
 
   get(cb) {
     let promises = [];
     for (let i = 0; i < urls.length; i++) {
       promises[i] = fetch(urls[i], (res) => {
-          return this._filterByImageExistance(res.body.items);
+          return this._filterItemsByImageExistance(res.body.items);
       });
     }
     Promise.all(promises)
@@ -41,6 +44,9 @@ class NewsCollection {
           results.push(news);
         });
         return results;
+      })
+      .then((items) => {
+        return this._parseNewsAsObject(items);
       })
       .then((items) => {
         return this._sortByCreatedAt(items);
