@@ -20,12 +20,20 @@ class NewsCollection {
     return _.sortBy(items, 'created_at').reverse();
   }
 
+  _createNewsModelByFeedly(item) {
+    return new newsModel({
+      title:      item.title,
+      url:        item.originId,
+      origin:     item.origin.title,
+      image_uri:  item.visual.url,
+      created_at: item.published
+    });
+  }
+
   get(cb) {
     let promises = [];
     for (let i = 0; i < urls.length; i++) {
-      promises[i] = fetch(urls[i], (res) => {
-          return res.body.items;
-      });
+      promises[i] = fetch(urls[i], (res) => { return res.body.items });
     }
     Promise.all(promises)
       .then((items) => {
@@ -34,19 +42,8 @@ class NewsCollection {
       .then((items) => {
         return this._filterItemsByImageExistance(items);
       })
-      .then((itemsWithImage) => {
-        let results = [];
-        _.map(itemsWithImage, (item) => {
-          let news = new newsModel({
-            title:      item.title,
-            url:        item.originId,
-            origin:     item.origin.title,
-            image_uri:  item.visual.url,
-            created_at: item.published
-          });
-          results.push(news);
-        });
-        return results;
+      .then((items) => {
+        return _.map(items, (item) => { return this._createNewsModelByFeedly(item) });
       })
       .then((items) => {
         return this._parseNewsModelAsObject(items);
