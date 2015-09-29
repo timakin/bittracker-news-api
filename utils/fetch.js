@@ -1,6 +1,6 @@
 "use strict";
 
-var request = require('superagent');
+let request = require('superagent');
 
 const fetch = function(url, cb) {
   return new Promise(function (resolve, reject){

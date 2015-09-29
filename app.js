@@ -1,10 +1,12 @@
-var express      = require('express');
-var path         = require('path');
-var logger       = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser   = require('body-parser');
-var news         = require('./controllers/news');
-var app          = express();
+"use strict";
+
+let express      = require('express');
+let path         = require('path');
+let logger       = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser   = require('body-parser');
+let news         = require('./controllers/news');
+let app          = express();
 
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
@@ -16,7 +18,7 @@ app.use('/api/v1/news', news);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
