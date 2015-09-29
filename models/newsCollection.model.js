@@ -28,8 +28,8 @@ class NewsCollection {
       });
     }
     Promise.all(promises)
-      .then((results) => {
-        return _.flatten(results);
+      .then((items) => {
+        return _.flatten(items);
       })
       .then((itemsWithImage) => {
         let results = [];
