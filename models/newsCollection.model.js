@@ -3,6 +3,7 @@
 var _         = require('underscore');
 var fetch     = require('../utils/fetch');
 var endpoints = require('../config/endpoints.json');
+var newsModel = require('./news.model');
 
 const urls = endpoints.feedly.jp;
 
@@ -11,13 +12,14 @@ class NewsCollection {
     let results = [];
     _.map(items, (item) => {
       if (item.visual && item.visual.url != 'none') {
-        results.push({
+        let news = new newsModel({
           title:      item.title,
           url:        item.originId,
           origin:     item.origin.title,
           image_uri:  item.visual.url,
           created_at: item.published
         });
+        results.push(news);
       }
     });
     return results;
@@ -25,8 +27,9 @@ class NewsCollection {
 
   _sortByCreatedAt(items) {
     let results = [];
-    _.map(items, (item) => { results = results.concat(item); });
-    return _.sortBy(results, 'created_at').reverse();
+    _.map(items, (item) => { results = results.concat(item) });
+    let resultObjects = _.map(results, (result) => { return result.toObject(); });
+    return _.sortBy(resultObjects, 'created_at').reverse();
   }
 
   get(cb) {
