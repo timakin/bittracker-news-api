@@ -18,6 +18,10 @@ class NewsCollection {
     });
   }
 
+  _createNewsCollectionModelByFeedly(items) {
+    return _.map(items, (item) => { return this._createNewsModelByFeedly(item) });
+  }
+
   _filterFeedlyItemsByImageExistance(items) {
     return _.select(items, (item) => { return (item.visual && item.visual.url != 'none') });
   }
@@ -41,7 +45,7 @@ class NewsCollection {
         return this._filterFeedlyItemsByImageExistance(items);
       })
       .then((items) => {
-        return _.map(items, (item) => { return this._createNewsModelByFeedly(item) });
+        return this._createNewsCollectionModelByFeedly(items);
       })
       .then((items) => {
         return this._parseNewsModelAsObject(items);
