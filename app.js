@@ -16,16 +16,16 @@ app.use('/api/v1/news', news);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 // error handlers
 app.use((err, req, res, next) => {
-    res.status(err.status || 500).json({
-        message: err.message
-    });
+  res.status(err.status || 500).json({
+      message: err.message
+  });
 });
 
 module.exports = app;
