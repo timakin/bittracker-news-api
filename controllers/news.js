@@ -6,10 +6,10 @@ var router    = express.Router();
 var newsCollectionModel = require('../models/newsCollection.model');
 
 /* GET users listing. */
-router.get('/jp', (req, res) => {
+router.get('/', (req, res) => {
   let newsCollection = new newsCollectionModel();
 
-  newsCollection.get((items) => {
+  newsCollection.get(req, (items) => {
     res.json({
         response: items
     });

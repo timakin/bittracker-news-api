@@ -5,7 +5,7 @@ var fetch     = require('../utils/fetch');
 var endpoints = require('../config/endpoints.json');
 var newsModel = require('./news.model');
 
-const urls = endpoints.feedly.jp;
+const urls = endpoints.feedly;
 
 class NewsCollection {
   _createNewsModelByFeedly(item) {
@@ -34,8 +34,8 @@ class NewsCollection {
     return _.sortBy(items, 'created_at').reverse();
   }
 
-  get(cb) {
-    let promises = _.map(urls, (url) => { return fetch(url, (res) => { return res.body.items }) });
+  get(req, cb) {
+    let promises = _.map(urls[req.query.country], (url) => { return fetch(url, (res) => { return res.body.items }) });
 
     Promise.all(promises)
       .then((items) => _.flatten(items)                               )
