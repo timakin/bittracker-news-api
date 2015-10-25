@@ -1,11 +1,10 @@
 "use strict";
 
-var _         = require('underscore');
-var express   = require('express');
-var router    = express.Router();
-var newsCollectionModel = require('../models/newsCollection.model');
+const _         = require('underscore');
+const express   = require('express');
+const router    = express.Router();
+const newsCollectionModel = require('../models/newsCollection.model');
 
-/* GET users listing. */
 router.get('/', (req, res) => {
   let newsCollection = new newsCollectionModel();
 

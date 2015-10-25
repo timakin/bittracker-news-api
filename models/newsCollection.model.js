@@ -1,9 +1,9 @@
 "use strict";
 
-var _         = require('underscore');
-var fetch     = require('../utils/fetch');
-var endpoints = require('../config/endpoints.json');
-var newsModel = require('./news.model');
+const _         = require('underscore');
+const fetch     = require('../utils/fetch');
+const endpoints = require('../config/endpoints.json');
+const newsModel = require('./news.model');
 
 const urls = endpoints.feedly;
 
